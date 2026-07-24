@@ -41,9 +41,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 button,a,label,input,select{touch-action:manipulation}
 /* ACESSIBILIDADE: foco visivel para teclado */
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
-/* ACESSIBILIDADE: respeita quem desativou animacoes no sistema */
+/* Nada e desligado: tudo continua animado. Para quem marcou "reduzir
+   movimento" no sistema, as animacoes so ficam mais lentas — movimento
+   lento incomoda muito menos do que movimento rapido, e as faixas
+   seguem cumprindo a funcao. */
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .carousel-track{animation-duration:70s!important}
+  .ticker-band-1 .ticker-track{animation-duration:45s!important}
+  .ticker-band-2 .ticker-track{animation-duration:55s!important}
+  .cta-btn,.buy-btn,.co-btn-gerar,.ag-yes{animation-duration:5s!important}
+  .hero-glow,.fan-glow{animation-duration:8s!important}
 }
 .grain{position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.25;}
 .top-bar{background:linear-gradient(90deg,var(--redd),var(--red),var(--redd));padding:10px 16px;text-align:center;font-size:.75rem;font-weight:700;letter-spacing:1px;color:#1a0004;position:relative;z-index:10;padding-top:calc(10px + env(safe-area-inset-top,0px));}
