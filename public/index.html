@@ -66,6 +66,17 @@ button,a,label,input,select{touch-action:manipulation}
 .hero-video-wrap{position:relative;z-index:1;width:100%;max-width:min(300px,72vw);margin:0 auto clamp(28px,5vw,40px);border-radius:var(--r);overflow:hidden;border:2px solid rgba(255,23,68,.6);box-shadow:0 20px 60px rgba(0,0,0,.75),0 0 50px rgba(255,23,68,.18);background:#0a0a0a;aspect-ratio:9/16;}
 .hero-video-wrap video{width:100%;height:100%;object-fit:cover;display:block}
 .hero-video-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 62%,rgba(0,0,0,.55) 100%);pointer-events:none}
+.video-som{position:absolute;bottom:12px;right:12px;z-index:22;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px);font-size:19px;line-height:1;display:flex;align-items:center;justify-content:center;color:#fff;}
+.video-som:active{transform:scale(.92)}
+.video-som.mudo{background:rgba(0,0,0,.72)}
+/* capa de play sobre o video */
+.video-capa{position:absolute;inset:0;z-index:24;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(0,0,0,.42);border:none;padding:0;transition:opacity .3s ease;}
+.video-capa.saindo{opacity:0;pointer-events:none}
+.vc-play{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--redd));box-shadow:0 10px 34px rgba(255,23,68,.5);display:flex;align-items:center;justify-content:center;animation:cta-pulse 2.2s ease-in-out infinite;position:relative;}
+.vc-play::after{content:'';border-style:solid;border-width:15px 0 15px 24px;border-color:transparent transparent transparent #fff;margin-left:6px;}
+.vc-txt{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;line-height:1.5;text-shadow:0 2px 10px rgba(0,0,0,.9);}
+.vc-txt b{color:var(--gold)}
+.video-capa:active .vc-play{transform:scale(.94)}
 .mockup-badge{position:absolute;top:10px;right:14px;background:var(--red);color:#000;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 11px;border-radius:100px;box-shadow:0 4px 20px rgba(255,23,68,.45);z-index:20;}
 .fan-glow{position:relative;width:240px;height:30px;margin:-30px auto 12px;background:radial-gradient(ellipse,rgba(255,23,68,.45) 0%,transparent 70%);filter:blur(12px);animation:fan-glow-p 3.5s ease-in-out infinite;pointer-events:none;z-index:0;}
 @keyframes fan-glow-p{0%,100%{opacity:.5;width:200px}50%{opacity:1;width:260px}}
@@ -350,10 +361,17 @@ html.age-locked,html.age-locked body{overflow:hidden}
        o cliente ve um retangulo preto no topo da pagina. -->
   <div class="hero-video-wrap">
     <div class="mockup-badge">EXCLUSIVO</div>
-    <video autoplay muted loop playsinline preload="metadata"
+    <video id="heroVideo" loop playsinline preload="metadata"
            poster="EDITAR_URL_IMAGEM_POSTER" disablepictureinpicture>
       <source src="https://doram.shop/wp-content/uploads/2026/07/03-LS-M04.mp4" type="video/mp4">
     </video>
+    <!-- Capa de play. O clique do cliente e um gesto explicito, entao o
+         audio nunca e bloqueado pelo navegador. -->
+    <button type="button" class="video-capa" id="btnPlay" aria-label="Assistir ao video com som">
+      <span class="vc-play" aria-hidden="true"></span>
+      <span class="vc-txt">Toque para assistir<br><b>com som</b></span>
+    </button>
+    <button type="button" class="video-som hidden" id="btnSom" aria-label="Ativar ou desativar o som">&#128266;</button>
   </div>
   <div class="fan-glow" aria-hidden="true"></div>
 
@@ -718,7 +736,40 @@ function initAgeGate(){
   if(btn) btn.addEventListener('click',liberar);
 }
 
-/* ---------- carrossel: pausa ao tocar, pausa fora da tela ---------- */
+function initVideo(){
+  var v=document.getElementById('heroVideo');
+  var capa=document.getElementById('btnPlay');
+  var som=document.getElementById('btnSom');
+  if(!v||!capa||!som) return;
+
+  function atualizarSom(){
+    som.innerHTML = v.muted ? '&#128263;' : '&#128266;';
+    som.classList.toggle('mudo', v.muted);
+  }
+
+  capa.addEventListener('click',function(){
+    v.muted=false; v.volume=1;
+    v.play().catch(function(){
+      /* Recusa rara com gesto explicito. Se acontecer, roda mudo em vez
+         de deixar o cliente olhando uma imagem parada. */
+      v.muted=true; v.play().catch(function(){});
+      atualizarSom();
+    });
+    capa.classList.add('saindo');
+    som.classList.remove('hidden');
+    atualizarSom();
+    track('ViewContent',{content_name:'video_hero_play'});
+  });
+
+  som.addEventListener('click',function(){
+    v.muted=!v.muted;
+    if(!v.muted){ v.volume=1; v.play().catch(function(){}); }
+    atualizarSom();
+  });
+
+  atualizarSom();
+}
+
 function initCarousel(){
   var outer=document.getElementById('carouselOuter');
   var track=document.getElementById('carTrack');
@@ -1223,8 +1274,15 @@ function restaurarPix(){
 
 document.getElementById('btnComprar').addEventListener('click', irParaCheckout);
 
+/* Portao e som ligam JA. Nao podem esperar o evento 'load', que so
+   dispara depois do video inteiro baixar — o cliente clica bem antes
+   disso, e o clique dele era perdido. Era esse o bug do som. */
+initAgeGate();
+initVideo();
+
+/* O resto pode esperar: nada aqui depende do primeiro clique. */
 window.addEventListener('load',function(){
-  initAgeGate(); initCarousel(); initFaq(); initAnchors();
+  initCarousel(); initFaq(); initAnchors();
   restaurarPix();
 });
 </script>
