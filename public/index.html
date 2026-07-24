@@ -312,21 +312,21 @@ html.age-locked,html.age-locked body{overflow:hidden}
 <!-- ====== PORTA DE IDADE ====== -->
 <div id="ageGate" role="dialog" aria-modal="true" aria-label="Verificacao de idade">
   <div class="ag-bg" aria-hidden="true"></div>
-  <div class="ag-ono ag-ono-1" aria-hidden="true"></div>
-  <div class="ag-ono ag-ono-2" aria-hidden="true"></div>
-  <div class="ag-ono ag-ono-3" aria-hidden="true"></div>
-  <div class="ag-ono ag-ono-4" aria-hidden="true"></div>
+  <div class="ag-ono ag-ono-1" aria-hidden="true">POW!</div>
+  <div class="ag-ono ag-ono-2" aria-hidden="true">BAM!</div>
+  <div class="ag-ono ag-ono-3" aria-hidden="true">ZAP!</div>
+  <div class="ag-ono ag-ono-4" aria-hidden="true">KA-POW!</div>
   <div class="ag-card">
     <span class="ag-warn">&#9888; Conte&uacute;do exclusivo para maiores de 18 anos</span>
     <h1 class="ag-title">Voc&ecirc; tem <span>18 anos ou mais?</span></h1>
     <p class="ag-sub">Este conte&uacute;do inclui material adulto +18 e &eacute; exclusivo para maiores de idade. Confirme para continuar.</p>
-    <button class="ag-yes" type="button" id="btnMaior18">
+    <button class="ag-yes" type="button" id="btnMaior18"
+      onclick="document.getElementById('ageGate').style.display='none';document.documentElement.classList.remove('age-locked');try{sessionStorage.setItem('idade_ok','1')}catch(e){};window.scrollTo(0,0);">
       <span class="ag-check">&#10003;</span> Sim, tenho 18 anos - continuar
     </button>
     <a class="ag-no" href="https://www.google.com" rel="noopener">N&atilde;o, sou menor de idade</a>
   </div>
 </div>
-
 <div class="grain" aria-hidden="true"></div>
 
 <div id="page-vendas">
