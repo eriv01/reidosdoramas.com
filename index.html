@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="pressel-on">
+<html lang="pt-BR">
 <head>
 
 <meta charset="UTF-8">
@@ -193,47 +193,10 @@ section{padding:clamp(44px,8vw,64px) clamp(16px,5vw,20px);position:relative}
 footer{background:var(--bg);padding:clamp(20px,4vw,28px) clamp(16px,4vw,20px) calc(clamp(20px,4vw,28px) + var(--safe-bottom));text-align:center;border-top:1px solid rgba(255,255,255,.04);}
 footer p{font-size:.7rem;color:var(--muted);line-height:1.8;max-width:380px;margin:0 auto}
 .footer-logo{font-family:'Montserrat',sans-serif;font-size:1rem;color:var(--red);margin-bottom:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
-/* ====== PRESSEL (tela de entrada) ====== */
-html.pressel-on,html.pressel-on body{overflow:hidden}
-#pressel{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:#000;overflow-y:auto;}
-#pressel .ps-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(255,23,68,.12) 0%,transparent 65%),radial-gradient(ellipse 60% 40% at 50% 100%,rgba(255,214,0,.07) 0%,transparent 60%),#000;z-index:0;}
-.ps-card{position:relative;z-index:1;width:100%;max-width:400px;text-align:center;}
-.ps-tag{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,214,0,.45);background:rgba(255,214,0,.07);color:var(--gold);font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:9px 16px;border-radius:100px;margin-bottom:22px;}
-.ps-title{font-family:'Montserrat',sans-serif;font-size:clamp(1.6rem,7vw,2.3rem);font-weight:900;line-height:1.15;margin-bottom:16px;}
-.ps-title span{color:var(--red)}
-.ps-sub{font-size:clamp(.85rem,3vw,.95rem);color:var(--muted);line-height:1.65;margin:0 auto 26px;max-width:330px;}
-.ps-lista{display:flex;flex-direction:column;gap:9px;text-align:left;max-width:300px;margin:0 auto 28px;}
-.ps-lista div{display:flex;gap:9px;align-items:flex-start;font-size:.82rem;color:#aaa;line-height:1.45}
-.ps-lista b{color:var(--gold);flex-shrink:0}
-.ps-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:linear-gradient(135deg,var(--red),var(--redd));color:#fff;font-family:'Montserrat',sans-serif;font-size:clamp(.9rem,3.4vw,1rem);font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:19px;border-radius:14px;min-height:58px;box-shadow:0 8px 32px rgba(255,23,68,.45);animation:cta-pulse 2.4s ease-in-out infinite;line-height:1.25;}
-.ps-btn:active{transform:scale(.97)}
-.ps-nota{margin-top:16px;font-size:.72rem;color:#555;letter-spacing:.5px}
 .hidden{display:none !important}
 </style>
 </head>
 <body>
-
-<!-- ====== PRESSEL ======
-     Tela de entrada. O clique aqui e o gesto que libera o audio do
-     video do hero — por isso ela vem antes de tudo. -->
-<div id="pressel" role="dialog" aria-modal="true" aria-label="Entrada">
-  <div class="ps-bg" aria-hidden="true"></div>
-  <div class="ps-card">
-    <span class="ps-tag">Acesso liberado por tempo limitado</span>
-    <h1 class="ps-title">1200 artes em estilo anime<br><span>por menos de R$ 20</span></h1>
-    <p class="ps-sub">Geradas com IA, prontas para baixar e usar. Sem assinatura, sem mensalidade.</p>
-    <div class="ps-lista">
-      <div><b>&#10003;</b> 1200 artes originais em alta resolucao</div>
-      <div><b>&#10003;</b> Organizadas em 6 categorias</div>
-      <div><b>&#10003;</b> Download imediato apos o pagamento</div>
-    </div>
-    <button class="ps-btn" type="button" id="btnPressel"
-      onclick="document.getElementById('pressel').style.display='none';document.documentElement.classList.remove('pressel-on');window.scrollTo(0,0);">
-      VER O PACK COMPLETO
-    </button>
-    <p class="ps-nota">Pagamento unico &middot; Download imediato</p>
-  </div>
-</div>
 
 <div class="grain" aria-hidden="true"></div>
 
@@ -464,22 +427,6 @@ function seguro(nome, fn){
   try{ fn(); }catch(e){ console.error('falhou em '+nome+':', e); }
 }
 
-/* ---------- pressel (tela de entrada) ---------- */
-function initPressel(){
-  var p=document.getElementById('pressel');
-  if(!p) return;
-  /* forca visivel: cobre o caso da aba voltar do cache do navegador */
-  p.style.display='flex';
-  document.documentElement.classList.add('pressel-on');
-  var b=document.getElementById('btnPressel');
-  if(b) b.addEventListener('click',function(){
-    p.style.display='none';
-    document.documentElement.classList.remove('pressel-on');
-    window.scrollTo(0,0);
-    try{ if(window.fbq) fbq('track','ViewContent',{content_name:'entrou_na_pagina'}); }catch(e){}
-  });
-}
-
 /* ---------- video do hero ---------- */
 function initVideo(){
   var v=document.getElementById('heroVideo');
@@ -596,7 +543,6 @@ function initCTA(){
   });
 }
 
-seguro('pressel', initPressel);
 seguro('video', initVideo);
 seguro('cta', initCTA);
 
