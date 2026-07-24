@@ -324,7 +324,7 @@ html.age-locked,html.age-locked body{overflow:hidden}
          pode depender do script do checkout. Se o JS quebrar, o cliente
          ainda entra. O initAgeGate() abaixo continua funcionando junto. -->
     <button class="ag-yes" type="button" id="btnMaior18"
-      onclick="document.getElementById('ageGate').style.display='none';document.documentElement.classList.remove('age-locked');try{sessionStorage.setItem('idade_ok','1')}catch(e){};window.scrollTo(0,0);">
+      onclick="document.getElementById('ageGate').style.display='none';document.documentElement.classList.remove('age-locked');window.scrollTo(0,0);">
       <span class="ag-check">&#10003;</span> Sim, tenho 18 anos - continuar
     </button>
     <a class="ag-no" href="https://www.google.com" rel="noopener">N&atilde;o, sou menor de idade</a>
@@ -699,17 +699,22 @@ document.getElementById('topDate').textContent =
   new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
 document.getElementById('footYear').textContent = new Date().getFullYear();
 
-/* ---------- porta de idade (lembra da escolha na sessao) ---------- */
+/* ---------- porta de idade ----------
+   Sem memoria de propósito: o portao aparece em TODA visita, inclusive
+   pra quem ja entrou antes. Ele e etapa do funil, nao so aviso legal —
+   se pular, o lead cai direto na pagina e a etapa se perde. */
 function initAgeGate(){
   var gate=document.getElementById('ageGate');
   var btn=document.getElementById('btnMaior18');
+  if(!gate) return;
+  /* garante o portao visivel mesmo se a aba voltar do cache do navegador */
+  gate.style.display='flex';
+  document.documentElement.classList.add('age-locked');
   function liberar(){
     gate.style.display='none';
     document.documentElement.classList.remove('age-locked');
-    try{ sessionStorage.setItem('idade_ok','1'); }catch(e){}
     window.scrollTo(0,0);
   }
-  try{ if(sessionStorage.getItem('idade_ok')==='1'){ liberar(); } }catch(e){}
   if(btn) btn.addEventListener('click',liberar);
 }
 
