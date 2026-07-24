@@ -422,6 +422,41 @@ footer p{font-size:.7rem;color:var(--muted);line-height:1.8;max-width:380px;marg
 
 document.getElementById('footYear').textContent = new Date().getFullYear();
 
+/* ---------- comeca sempre do topo ----------
+   Dois motivos para a pagina "descer sozinha":
+
+   1. O navegador restaura a posicao de rolagem ao recarregar. Como o
+      CSS tem scroll-behavior:smooth, essa volta vira uma descida
+      animada e parece bug.
+   2. Se o lead clicou no CTA do hero antes, a URL fica com #oferta —
+      e o navegador pula direto pra la em toda visita seguinte.
+
+   Isto resolve os dois. Roda antes de qualquer outra coisa. */
+(function comecarDoTopo(){
+  try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+  if(location.hash){
+    try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+  }
+  var html=document.documentElement, suave=html.style.scrollBehavior;
+  html.style.scrollBehavior='auto';        /* sobe seco, sem animacao */
+  window.scrollTo(0,0);
+  window.addEventListener('load',function(){
+    window.scrollTo(0,0);
+    setTimeout(function(){ html.style.scrollBehavior=suave||''; },80);
+  });
+})();
+
+/* O navegador guarda onde o lead parou e restaura ao recarregar ou ao
+   voltar. Com scroll-behavior:smooth isso vira uma descida animada e
+   parece que a pagina desceu sozinha ate a oferta. Aqui a gente assume
+   o controle: toda visita comeca no topo. */
+if('scrollRestoration' in history){ history.scrollRestoration='manual'; }
+window.scrollTo(0,0);
+window.addEventListener('pageshow',function(e){
+  /* pageshow com persisted=true = veio do cache de voltar/avancar */
+  if(e.persisted) window.scrollTo(0,0);
+});
+
 /* Cada init roda isolado: se um quebrar, os outros continuam. */
 function seguro(nome, fn){
   try{ fn(); }catch(e){ console.error('falhou em '+nome+':', e); }
@@ -541,6 +576,13 @@ function initCTA(){
       }catch(e){}
     });
   });
+}
+
+/* URL com #oferta (link compartilhado, historico) faz o navegador
+   pular direto pro bloco. Limpa o hash antes que isso aconteca. */
+if(location.hash){
+  try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+  window.scrollTo(0,0);
 }
 
 seguro('video', initVideo);
