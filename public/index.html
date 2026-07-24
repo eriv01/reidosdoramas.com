@@ -768,6 +768,20 @@ function initVideo(){
   });
 
   atualizarSom();
+
+  /* Pausar de fora: usado ao entrar no checkout e ao sair da tela. */
+  window.pausarVideoHero=function(){
+    if(!v.paused){ v.pause(); }
+  };
+
+  /* Fora da tela, para. Audio tocando enquanto o lead le a oferta la
+     embaixo compete com a propria oferta. */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(ents){
+      ents.forEach(function(e){ if(!e.isIntersecting && !v.paused) v.pause(); });
+    },{threshold:0.35});
+    io.observe(v);
+  }
 }
 
 function initCarousel(){
@@ -989,6 +1003,9 @@ function avisar(msg){
 
 /* ---- landing -> checkout ---- */
 function irParaCheckout(){
+  /* O checkout e tela de decisao. Audio rodando por cima atrapalha
+     o preenchimento do formulario e a leitura do valor. */
+  if(window.pausarVideoHero) window.pausarVideoHero();
   if($("page-vendas")) $("page-vendas").style.display="none";
   $("page-checkout").style.display="block";
   window.scrollTo(0,0);
