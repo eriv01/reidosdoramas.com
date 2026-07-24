@@ -216,20 +216,22 @@ html.pressel-on,html.pressel-on body{overflow:hidden}
 <!-- ====== PRESSEL ======
      Tela de entrada. O clique aqui e o gesto que libera o audio do
      video do hero — por isso ela vem antes de tudo. -->
-<div id="ageGate" role="dialog" aria-modal="true" aria-label="Verificacao de idade">
-  <div class="ag-bg" aria-hidden="true"></div>
-  <div class="ag-ono ag-ono-1" aria-hidden="true"></div>
-  <div class="ag-ono ag-ono-2" aria-hidden="true"></div>
-  <div class="ag-ono ag-ono-3" aria-hidden="true"></div>
-  <div class="ag-ono ag-ono-4" aria-hidden="true"></div>
-  <div class="ag-card">
-    <span class="ag-warn">&#9888; Conte&uacute;do exclusivo para maiores de 18 anos</span>
-    <h1 class="ag-title">Voc&ecirc; tem <span>18 anos ou mais?</span></h1>
-    <p class="ag-sub">Este conte&uacute;do inclui material adulto +18 e &eacute; exclusivo para maiores de idade. Confirme para continuar.</p>
-    <button class="ag-yes" type="button" onclick="document.getElementById('ageGate').style.display='none';document.documentElement.classList.remove('age-locked');window.scrollTo(0,0);">
-      <span class="ag-check">&#10003;</span> Sim, tenho 18 anos - continuar
+<div id="pressel" role="dialog" aria-modal="true" aria-label="Entrada">
+  <div class="ps-bg" aria-hidden="true"></div>
+  <div class="ps-card">
+    <span class="ps-tag">Acesso liberado por tempo limitado</span>
+    <h1 class="ps-title">1200 artes em estilo anime<br><span>por menos de R$ 20</span></h1>
+    <p class="ps-sub">Geradas com IA, prontas para baixar e usar. Sem assinatura, sem mensalidade.</p>
+    <div class="ps-lista">
+      <div><b>&#10003;</b> 1200 artes originais em alta resolucao</div>
+      <div><b>&#10003;</b> Organizadas em 6 categorias</div>
+      <div><b>&#10003;</b> Download imediato apos o pagamento</div>
+    </div>
+    <button class="ps-btn" type="button" id="btnPressel"
+      onclick="document.getElementById('pressel').style.display='none';document.documentElement.classList.remove('pressel-on');window.scrollTo(0,0);">
+      VER O PACK COMPLETO
     </button>
-    <a class="ag-no" href="https://www.google.com">N&atilde;o, sou menor de idade</a>
+    <p class="ps-nota">Pagamento unico &middot; Download imediato</p>
   </div>
 </div>
 
@@ -395,7 +397,7 @@ html.pressel-on,html.pressel-on body{overflow:hidden}
         <div class="what-item"><span class="check">&#10003;</span> EDITAR_TIPO_DE_LICENCA</div>
         <div class="what-item"><span class="check">&#10003;</span> Download imediato apos o pagamento</div>
       </div>
-      <a href="https://pay.lowify.com.br/checkout?product_id=wzIZih" class="buy-btn js-checkout" target="_blank" rel="noopener">QUERO O PACK - R$ 17,00</a>
+      <a href="EDITAR_URL_CHECKOUT_EXTERNO" class="buy-btn js-checkout" target="_blank" rel="noopener">QUERO O PACK - R$ 17,00</a>
       <div class="secure-badges">
         <div class="sec-badge">Pagamento seguro</div>
         <div class="sec-badge">Download imediato</div>
